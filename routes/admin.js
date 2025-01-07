@@ -5,6 +5,8 @@ require("dotenv").config()
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 
+const adminMiddleware = require("../middleware/admin")
+
 adminRouter.post("/signup", async(req,res)=>{
   const {email, password, fullname} = req.body;
 
@@ -63,11 +65,11 @@ adminRouter.post("/signin", async(req,res)=>{
   }
 })
 
-adminRouter.post("/course",(req,res)=>{
+adminRouter.post("/course",adminMiddleware, (req,res)=>{
   
 })
 
-adminRouter.put("/course",(req,res)=>{
+adminRouter.put("/course",adminMiddleware, (req,res)=>{
   
 })
 

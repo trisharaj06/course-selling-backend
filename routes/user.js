@@ -4,6 +4,7 @@ const userRouter = Router()
 const bcrypt = require("bcrypt")
 require("dotenv").config()
 const jwt = require("jsonwebtoken")
+const userMiddleware = require("../middleware/user")
 
 userRouter.post("/signup", async (req,res)=>{
  
@@ -63,7 +64,7 @@ userRouter.post("/signin", async(req,res)=>{
   }
 })
 
-userRouter.get("/purchases",(req,res)=>{
+userRouter.get("/purchases",userMiddleware, (req,res)=>{
   res.json({
     message: "all purchased courses"
   })
