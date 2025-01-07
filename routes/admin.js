@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const {adminmodel} = require("../db")
+const {adminmodel, coursemodel} = require("../db")
 const adminRouter = Router()
 require("dotenv").config()
 const jwt = require("jsonwebtoken")
@@ -65,12 +65,43 @@ adminRouter.post("/signin", async(req,res)=>{
   }
 })
 
-adminRouter.post("/course",adminMiddleware, (req,res)=>{
-  
+adminRouter.post("/course",adminMiddleware, async(req,res)=>{
+  const {title, description, price, imageURL} = req.body;
+
+  const adminId = req.userId;
+
+  const course = await coursemodel.create({
+    title,description,price,imageURL,creatorId:adminId
+  }) 
+
+  res.status(201).json({
+    message: "course created successfully"
+  })
 })
 
-adminRouter.put("/course",adminMiddleware, (req,res)=>{
-  
+adminRouter.put("/course",adminMiddleware, async(req,res)=>{
+  const {title, description, price, imageURL, courseId} = req.body;
+  const adminId = re.userId
+
+  const course = await coursemodel.updateOne({
+    _id: courseId,
+    creatorId: adminId
+  },{
+    title,description,price,imageURL
+  }) 
+
+  res.json({
+    message: "course updated"
+  })
 })
 
+adminRouter.get("/course/bulk", adminMiddleware, async(req,res)=>{
+  const adminId = req.userId;
+
+  const allCourses = await coursemodel.find({creatorId: adminId})
+
+  res.json({
+    allCourses
+  })
+})
 module.exports = adminRouter
