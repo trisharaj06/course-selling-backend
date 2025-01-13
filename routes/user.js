@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const {usermodel, coursemodel} = require("../db")
+const {usermodel, coursemodel, purchasemodel} = require("../db")
 const userRouter = Router()
 const bcrypt = require("bcrypt")
 require("dotenv").config()
@@ -66,7 +66,7 @@ userRouter.post("/signin", async(req,res)=>{
 
 userRouter.get("/purchases",userMiddleware, async(req,res)=>{
   const userId = req.userId;
-  const purchases = await coursemodel.find({userId})
+  const purchases = await purchasemodel.find({userId}).populate('courseId').populate('userId', '-password')
   res.json({
     message: "all purchased courses",purchases
   })
